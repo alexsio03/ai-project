@@ -134,14 +134,13 @@ def calc_defuzz(risk_mins):
     defuzz_value = skf.defuzz(np.arange(3), risk_mins_array, 'centroid')
 
     # Print the defuzzified value
-    print("Defuzzified Risk:", risk_values[int(defuzz_value)])
+    return "Risk Value: " + risk_values[int(defuzz_value)]
 
 def get_risk_value(app):
     scores = calcMembScore(app)
     rule_vals = calcRuleValues(scores)
     risk_mins = calcRisks(rule_vals)
-    calc_defuzz(risk_mins)
-    app.printApplication()
+    print("Applicant " + app.appId,  calc_defuzz(risk_mins))
 
 for app in apps:
     get_risk_value(app)
