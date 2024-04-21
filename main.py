@@ -9,10 +9,10 @@ inputs.printFuzzySetsDict()
 risks = readFuzzySetsFile('Risks.txt')
 # risks.printFuzzySetsDict()
 rules = readRulesFile('Rules.txt')
-# rules.printRuleList()
+rules.printRuleList()
 apps = readApplicationsFile('Applications.txt')
 # for app in apps:
-#     app.printApplication()
+#     print(app.data)
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y']
 col_cnt = 0
@@ -37,59 +37,71 @@ for set in inputs:
     elif "History" in set:
         hist_sets.update( { set : inputs.get(set) } )
 
+def plotSet(set):
+    col_cnt = 0
+    for var in set:
+        fuzz = set.get(var)
+        plt.plot(fuzz.x, fuzz.y, colors[col_cnt])
+        col_cnt += 1
+
 # Plot for Age
 plt.subplot(3, 2, 1)  # Subplot with 3 rows, 2 columns, and this being the first plot
-col_cnt = 0
-for age in age_sets:
-    age_fuzz = age_sets.get(age)
-    plt.plot(age_fuzz.x, age_fuzz.y, colors[col_cnt])
-    col_cnt += 1
+plotSet(age_sets)
 plt.title('Age Sets')
 
 # Plot for Income
 plt.subplot(3, 2, 2)  # Subplot with 3 rows, 2 columns, and this being the second plot
-col_cnt = 0
-for income in inc_sets:
-    inc_fuzz = inc_sets.get(income)
-    plt.plot(inc_fuzz.x, inc_fuzz.y, colors[col_cnt])
-    col_cnt += 1
+plotSet(inc_sets)
 plt.title('Income Sets')
 
 # Plot for Assets
 plt.subplot(3, 2, 3)  # Subplot with 3 rows, 2 columns, and this being the third plot
-col_cnt = 0
-for asset in ass_sets:
-    asset_fuzz = ass_sets.get(asset)
-    plt.plot(asset_fuzz.x, asset_fuzz.y, colors[col_cnt])
-    col_cnt += 1
+plotSet(ass_sets)
 plt.title('Asset Sets')
 
 # Plot for Amount
 plt.subplot(3, 2, 4)  # Subplot with 3 rows, 2 columns, and this being the fourth plot
-col_cnt = 0
-for amount in amt_sets:
-    amt_fuzz = amt_sets.get(amount)
-    plt.plot(amt_fuzz.x, amt_fuzz.y, colors[col_cnt])
-    col_cnt += 1
+plotSet(amt_sets)
 plt.title('Amount Sets')
 
 # Plot for Job
 plt.subplot(3, 2, 5)  # Subplot with 3 rows, 2 columns, and this being the fifth plot
-col_cnt = 0
-for job in job_sets:
-    job_fuzz = job_sets.get(job)
-    plt.plot(job_fuzz.x, job_fuzz.y, colors[col_cnt])
-    col_cnt += 1
+plotSet(job_sets)
 plt.title('Job Sets')
 
 # Plot for History
 plt.subplot(3, 2, 6)  # Subplot with 3 rows, 2 columns, and this being the sixth plot
-col_cnt = 0
-for history in hist_sets:
-    hist_fuzz = hist_sets.get(history)
-    plt.plot(hist_fuzz.x, hist_fuzz.y, colors[col_cnt])
-    col_cnt += 1
+plotSet(hist_sets)
 plt.title('History Sets')
 
 plt.tight_layout()  # Adjust layout to prevent overlap
-plt.show()
+
+
+def calcVars(val, sets):
+    vars = {}
+    for tag in sets:
+        set = sets.get(tag)
+        if val == set.x[-1] + 1:
+            val -= 1
+        vars.update({ tag: set.y[val] })
+    return vars
+
+def calcMembScore(app):
+    data_sets = [age_sets, inc_sets, ass_sets, amt_sets, job_sets, hist_sets]
+    member_vals = {}
+    
+    for data, data_set in zip(app.data, data_sets):
+        var = calcVars(data[1], data_set)
+        member_vals.update(var)
+        
+    return member_vals
+
+def calcRiskValues(scores):
+    return
+
+apps[0].printApplication()
+print(calcMembScore(apps[0]))
+calcRiskValues(calcMembScore(apps[0]))
+
+# plt.show()
+
