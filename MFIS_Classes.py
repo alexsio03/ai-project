@@ -11,6 +11,7 @@ class FuzzySet:
     label = ""		# label of the specific fuzzy set (ex.: Young)
     x = []		# list of abscissas, from xmin to xmax, 1 by 1
     y = []		# list of ordinates (float)
+    a_d = []
     memDegree = 0       # membership degree for the current application
 
     def printSet(self):

@@ -28,6 +28,7 @@ def readFuzzySetsFile(fleName):
         d = int(elementsList[6])
         x = np.arange(xmin,xmax,1)
         y = skf.trapmf(x, [a, b, c, d])
+        fuzzySet.a_d = [int(elementsList[3]), int(elementsList[4]), int(elementsList[5]), int(elementsList[6])]
         fuzzySet.x = x
         fuzzySet.y = y
         fuzzySetsDict.update( { setid : fuzzySet } )
