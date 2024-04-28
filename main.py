@@ -4,6 +4,9 @@ from MFIS_Classes import *
 from MFIS_Read_Functions import *
 import matplotlib.pyplot as plt
 
+# ---------------------------------------------
+# Variable Definitions
+
 inputs = readFuzzySetsFile('InputVarSets.txt')
 # inputs.printFuzzySetsDict()
 risks = readFuzzySetsFile('Risks.txt')
@@ -14,10 +17,11 @@ apps = readApplicationsFile('Applications.txt')
 # for app in apps:
 #     print(app.data)
 
-show_plots = False
-
 colors = ['b', 'g', 'r', 'c', 'm', 'y']
 col_cnt = 0
+
+show_plot_inp = input("Do you want to display the risk set plots? (y/n) ")
+show_plots = show_plot_inp == 'y'
 
 age_sets = {}
 inc_sets = {}
@@ -41,6 +45,12 @@ for set in inputs:
 risk_sets = {}
 for risk in risks:
     risk_sets.update( { risk: risks.get(risk) }) 
+
+# ---------------------------------------------
+
+
+# ---------------------------------------------
+# Function Definitions
 
 def plotSet(set):
         col_cnt = 0
@@ -103,44 +113,53 @@ def calc_defuzz(risk_mins):
     mf1 = skf.trapmf(x, low_ad)
     mf2 = skf.trapmf(x, med_ad)
     mf3 = skf.trapmf(x, high_ad)
-    print(risk_mins)
     mf1_weighted = risk_mins[0] * mf1
     mf2_weighted = risk_mins[1] * mf2
     mf3_weighted = risk_mins[2] * mf3
 
     # Element-wise maximum
     mf = np.maximum(mf2_weighted, np.maximum(mf1_weighted, mf3_weighted))
-    plotSet(risk_sets)
-    plt.title('Risk Sets')
-    plt.show()
     xCentroid = skf.defuzz(x,mf,'centroid')
-    print(int(xCentroid))
-    membs = list(calcVars(int(xCentroid), risk_sets).values())
-    print(membs)
-    max_memb = 0
-    for i in range(len(membs)):
-        if membs[i] > membs[max_memb]:
-            max_memb = i
-    plt.axvline(x=xCentroid, ymin=-0.2, ymax=1.2, color='k')
-    plt.plot(x, mf, 'k')
-    plt.show()
+    # plt.axvline(x=xCentroid, ymin=-0.2, ymax=1.2, color='k')
+    # plt.plot(x, mf, 'k')
+    # plt.show()
 
-    # Print the defuzzified value
-    return "Risk Value: " + risk_strs[max_memb]
+    return int(xCentroid)
 
-# MAIN FUNCTION
 def get_risk_value(app):
     scores = calcMembScore(app)
     rule_vals = calcRuleValues(scores)
     risk_mins = calcRisks(rule_vals)
-    print("Applicant " + app.appId,  calc_defuzz(risk_mins))
+    risk_defuzzed = calc_defuzz(risk_mins)
+    f = open('Results.txt', 'a')
+    f.write("Applicant " + app.appId + " Risk Value: " + str(risk_defuzzed) + "\n")
+    f.close()
 
-get_risk_value(apps[33])
-# for app in apps:
-#     get_risk_value(app)
+# ---------------------------------------------
 
 
-# --------------------------------
+
+# ---------------------------------------------
+# Main Function
+
+def main():
+    f = open('Results.txt', 'w')
+    f.write("")
+    f.close()
+    # get_risk_value(apps[33])
+    for app in apps:
+        get_risk_value(app)
+    print("Results calculated, stored in 'Results.txt'")
+
+if __name__ == "__main__":
+    main()
+
+# ---------------------------------------------
+
+
+
+# ---------------------------------------------
+# Show Plots
 
 if show_plots:
     # Plot for Age
