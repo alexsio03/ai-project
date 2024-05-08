@@ -1,0 +1,3 @@
+Rule51, Risk=LowR, Assets=Scarce, (Amount=Small | Amount=Medium), History=Good
+Rule52, Risk=HighR, (IncomeLevel=Low | IncomeLevel=Med), Amount=Big, History=Poor
+Rule53, Risk=MediumR, (Amount=Big | Amount=VeryBig), Job=Stable, History=Good

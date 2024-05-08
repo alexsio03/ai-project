@@ -17,7 +17,7 @@ Applicant 0016 Risk Value: 52
 Applicant 0017 Risk Value: 54
 Applicant 0018 Risk Value: 52
 Applicant 0019 Risk Value: 61
-Applicant 0020 Risk Value: 45
+Applicant 0020 Risk Value: 49
 Applicant 0021 Risk Value: 63
 Applicant 0022 Risk Value: 42
 Applicant 0023 Risk Value: 49

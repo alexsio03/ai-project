@@ -13,6 +13,8 @@ risks = readFuzzySetsFile('Risks.txt')
 # risks.printFuzzySetsDict()
 rules = readRulesFile('Rules.txt')
 # rules.printRuleList()
+new_rules = readRulesFile('NewRules.txt')
+new_rules.printRuleList()
 apps = readApplicationsFile('Applications.txt')
 # for app in apps:
 #     print(app.data)
@@ -84,6 +86,22 @@ def calcRuleValues(scores):
     for rule in rules:
         for ant in rule.antecedent:
             risk_scores.append(scores.get(ant))
+        rule_vals.update( { rule.ruleName: [rule.consequent, min(risk_scores)] })
+        risk_scores = []
+    or_scores = []
+    for rule in new_rules:
+        for ant in rule.antecedent:
+            if '|' in ant:
+                if '(' in ant:
+                    ant = ant.replace('(', '')
+                if ')' in ant:
+                    ant = ant.replace(')', '')
+                ants = ant.split(" | ")
+                for a in ants:
+                    or_scores.append(scores.get(a))
+                risk_scores.append(max(or_scores))
+            else:
+                risk_scores.append(scores.get(ant))
         rule_vals.update( { rule.ruleName: [rule.consequent, min(risk_scores)] })
         risk_scores = []
     return rule_vals
